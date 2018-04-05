@@ -48,38 +48,38 @@ def get_mini_batch(fname,aug):
 			Nbody[2] = -Nbody[2]
 		prand = np.random.rand()
 		if prand < 1./6:
-			LPT = np.transpose(LPT, axes = (0,2,3,1))
+			LPT = np.transpose(LPT.copy(), axes = (0,2,3,1))
 			LPT = swap(LPT,0,2)
 			LPT = swap(LPT,1,2)
-			Nbody = np.transpose(Nbody, axes = (0,2,3,1))
+			Nbody = np.transpose(Nbody.copy(), axes = (0,2,3,1))
 			Nbody = swap(Nbody,0,2)
 			Nbody = swap(Nbody,1,2)
 		elif prand < 2./6:
-			LPT = np.transpose(LPT, axes = (0,2,1,3))
+			LPT = np.transpose(LPT.copy(), axes = (0,2,1,3))
 			LPT = swap(LPT,0,1)
-			Nbody = np.transpose(Nbody, axes = (0,2,1,3))
+			Nbody = np.transpose(Nbody.copy(), axes = (0,2,1,3))
 			Nbody = swap(Nbody,0,1)
 		elif prand < 3./6:
-			LPT = np.transpose(LPT, axes = (0,1,3,2))
+			LPT = np.transpose(LPT.copy(), axes = (0,1,3,2))
 			LPT = swap(LPT,1,2)
-			Nbody = np.transpose(Nbody, axes = (0,1,3,2))
+			Nbody = np.transpose(Nbody.copy(), axes = (0,1,3,2))
 			Nbody = swap(Nbody,1,2)
 		elif prand < 4./6:
-			LPT = np.transpose(LPT, axes = (0,3,1,2))
+			LPT = np.transpose(LPT.copy(), axes = (0,3,1,2))
 			LPT = swap(LPT,1,2)
 			LPT = swap(LPT,0,2)
-			Nbody = np.transpose(Nbody, axes = (0,3,1,2))
+			Nbody = np.transpose(Nbody.copy(), axes = (0,3,1,2))
 			Nbody = swap(Nbody,1,2)
 			Nbody = swap(Nbody,0,2)
 		elif prand < 5./6:
-			LPT = np.transpose(LPT, axes = (0,3,2,1))
+			LPT = np.transpose(LPT.copy(), axes = (0,3,2,1))
 			LPT = swap(LPT,0,2)
-			Nbody = np.transpose(Nbody, axes = (0,3,2,1))
+			Nbody = np.transpose(Nbody.copy(), axes = (0,3,2,1))
 			Nbody = swap(Nbody,0,2)
 	return torch.from_numpy(LPT.copy()).float(),torch.from_numpy(Nbody.copy()).float()
 
 def swap(x,index1,index2):
-	temp = x[index1]
+	temp = x[index1].copy()
 	x[index1] = x[index2]
 	x[index2] = temp
 	return x
