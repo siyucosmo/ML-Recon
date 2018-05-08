@@ -8,6 +8,7 @@ from discriminator import LPT2NbodyDiscriminator
 from data_utils import SimuData
 from torch.utils.data import DataLoader
 from cgan import CGAN
+import numpy as np
 
 # python reconLPT2Nbody_cGAN.py --config_file_path configs/config.json
 
@@ -27,6 +28,7 @@ if __name__ == "__main__":
 	l2_criterion = nn.MSELoss()
 	entropy_criterion = nn.BCELoss()
 	base_data_path = configs["base_data_path"]
+	output_path = configs["output_path"]
 	in_channels = 6 if configs["train"]["cgan"]["conditioning"] else 3
 	discriminator = LPT2NbodyDiscriminator(BasicBlock, [3, 3, 3], in_channels)
 	discriminator.cuda()
@@ -60,16 +62,38 @@ if __name__ == "__main__":
 		discriminator,
 		configs["train"]["cgan"]
 	)
+	eval_frequency = configs["train"]["eval_frequency"]
+	loss_val = []
+	best_validation_accuracy = 100
+
 	for _ in range(configs['train']['num_epoches']):
 		for t, data in enumerate(TrainLoader, 0):
 			start_time = time.time()
 			batch_x = torch.autograd.Variable(data[0], requires_grad=False).cuda()
 			batch_y = torch.autograd.Variable(data[1], requires_grad=False).cuda()
+			net.train()
 			net.train_discriminator_step(batch_x, batch_x, batch_y)
 			net.train_generator_step(batch_x,
 				batch_y,
 				extra_loss=l2_criterion,
 				extra_loss_fraction=configs["train"]["cgan"]["extra_loss_fraction"])
+			if (t != 0 and t % eval_frequency == 0):
+				net.eval()
+				start_time = time.time()
+				_loss = 0
+				for t_val, data in enumerate(ValLoader,0):
+					g_batch_x = torch.autograd.Variable(data[0],requires_grad=False,volatile=True).cuda()
+					y_pred = net.forward_generator(g_batch_x)
+					_loss += l2_criterion(y_pred, torch.autograd.Variable(data[1],requires_grad=False).cuda()).data[0]
+				loss_val.append(_loss/t_val)		
+				np.savetxt(output_path+'valLoss.txt',loss_val)
+				print ('valid: ' + str(_loss/t_val))
+				"""
+				if( _loss/t_val < best_validation_accuracy):
+					torch.save(net,output_path+'BestModel.pt')
+				if(iterTime%500==0 and iterTime!=0):
+					torch.save(net,output_path+'BestModel'+str(iterTime)+'.pt')
+				"""
 			print(t)
 
 

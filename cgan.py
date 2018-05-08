@@ -94,10 +94,16 @@ class CGAN:
 		g_loss.backward()
 		self._g_optimizer.step()
 
-	def train():
+	def forward_generator(self, g_batch_x):
+		return self._generator(g_batch_x)
+
+	def forward_discriminator(self, g_batch_x):
+		return self._discriminator(g_batch_x)
+
+	def train(self):
 		self._generator.train()
 		self._discriminator.train()
 
-	def eval():
+	def eval(self):
 		self._generator.eval()
 		self._discriminator.eval()

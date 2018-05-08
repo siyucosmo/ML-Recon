@@ -1,5 +1,6 @@
 {
 	"base_data_path": "/wei/projects/data/ML-Recon/",
+	"output_path": "/wei/projects/data/ML-Recon/",
 	"train": {
 		"data_partition": {
 			"lIndex": 0,
@@ -8,8 +9,8 @@
 		},
 		"batch_size": 5,
 		"num_workers": 4,
-		"num_epoches": 10,
-		"eval_frequency": 20,
+		"num_epoches": 2,
+		"eval_frequency": 5,
 		"cgan": {
 			"conditioning": true,
 			"extra_loss_fraction": 0.5,
