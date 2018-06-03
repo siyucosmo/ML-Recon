@@ -6,8 +6,8 @@ def pos_int_to_base(x, b=2, extend_zero_to_length=0):
 	out = []
 	cur = x
 	while cur > 0:
-		out.append(cur % b)
-		cur = cur / b
+		out.append(int(cur % b))
+		cur = int(cur / b)
 	if extend_zero_to_length>0 and len(out) < extend_zero_to_length:
 		out += [0]*(extend_zero_to_length - len(out))
 	return out[::-1]
