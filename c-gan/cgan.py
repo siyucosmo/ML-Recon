@@ -71,6 +71,7 @@ class CGAN:
 												requires_grad=False).cuda())
 		fake_loss.backward()
 		self._d_optimizer.step()
+		print ("D:"+str(fake_loss.item()))
 
 
 	def train_generator_step(self,
@@ -93,6 +94,7 @@ class CGAN:
 					+ extra_loss_fraction * extra_loss(generator_out, g_batch_y)
 		g_loss.backward()
 		self._g_optimizer.step()
+		print ("G:"+str(g_loss.item()))
 
 	def forward_generator(self, g_batch_x):
 		return self._generator(g_batch_x)

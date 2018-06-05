@@ -1,6 +1,9 @@
 import torch
 from torch.utils.data.dataset import Dataset
 import numpy as np
+import sys
+sys.path.insert(0,'/mnt/home/siyuh/Project/Recon/analysis')
+from genwaves import genwaves
 
 class SimuData(Dataset):
 	def __init__(self,base_path,lIndex,hIndex,aug):
@@ -47,10 +50,10 @@ def get_mini_batch(fname,aug):
 		if prand < 1./6:
 			LPT = np.transpose(LPT, axes = (0,2,3,1))
 			LPT = swap(LPT,0,2)
-			LPT = swap(LPT,1,2)
+			LPT = swap(LPT,0,1)
 			Nbody = np.transpose(Nbody, axes = (0,2,3,1))
 			Nbody = swap(Nbody,0,2)
-			Nbody = swap(Nbody,1,2)
+			Nbody = swap(Nbody,0,1)
 		elif prand < 2./6:
 			LPT = np.transpose(LPT, axes = (0,2,1,3))
 			LPT = swap(LPT,0,1)
@@ -74,3 +77,46 @@ def get_mini_batch(fname,aug):
 			Nbody = np.transpose(Nbody, axes = (0,3,2,1))
 			Nbody = swap(Nbody,0,2)
 	return torch.from_numpy(LPT.copy()).float(),torch.from_numpy(Nbody.copy()).float()
+
+
+#def crop_tensor(x):
+#	return x.narrow(2,1,x.shape[2]-1).narrow(3,1,x.shape[3]-1).narrow(4,1,x.shape[4]-1).contiguous()
+def crop_tensor(x):
+	x = x.narrow(2,1,x.shape[2]-3).narrow(3,1,x.shape[3]-3).narrow(4,1,x.shape[4]-3).contiguous()
+	return x
+
+def test_prediction(path,model,TestLoader):
+	net = torch.load(path+model)
+	net.cuda()
+	net.eval()
+	'''
+	for t, data in enumerate(TestLoader, 0):
+		print (t)
+		NetInput = torch.autograd.Variable(data[0],requires_grad=False).cuda()
+		Y_pred = net(NetInput)
+		np.save(path+'test_'+str(t)+'.npy',np.concatenate((np.squeeze(Y_pred.data.cpu().numpy()),np.squeeze(data[1].numpy())),axis=0))
+		if(t==1000):
+			break
+	'''
+	data = np.fromfile('/mnt/home/siyuh/Project/Recon/data/32-pancake/00-00-01-phi090/00000000-00001000.32.10.f4',dtype='f4').reshape([-1,32,32,32,10])
+	#data = np.fromfile('/mnt/home/siyuh/Project/Recon/data/32-pancake/00.10/00000000-00001000.32.10.f4',dtype='f4').reshape([-1,32,32,32,10])
+	for t in range(0,5):
+		print (t)
+		data_temp = torch.autograd.Variable(torch.from_numpy(np.expand_dims(np.einsum('ijkl->lijk', data[t][:,:,:,1:4]),axis=0)).float(),requires_grad=False).cuda()
+		NetInput = torch.autograd.Variable(data_temp,requires_grad=False).cuda()
+		Y_pred = net(NetInput)
+		np.save(path+'pancake_00-00-01-test_'+str(t)+'.npy',np.squeeze(Y_pred.data.cpu().numpy()))
+		#np.save(path+'00.10_test_'+str(t)+'.npy',np.squeeze(Y_pred.data.cpu().numpy()))
+	
+def analysis(path,size, A, phi, k):
+        #data = genwaves(size, A, phi, k)
+        #data = np.einsum('ijkl->lijk',data)
+        data = np.zeros([3,32,32,32])
+        data = np.expand_dims(data,axis=0)
+        NetInput = torch.autograd.Variable(torch.from_numpy(data).float(),requires_grad=False).cuda()
+        net = torch.load(path+'/BestModel.pt')
+        net.cuda()
+        net.eval()
+        Y_pred = net(NetInput)
+        print (size,A,phi,k)
+        np.save(path+'A_'+str(A)+'_k_'+str(k).replace(" ","")+'_phi_'+str(phi)+'.npy',np.concatenate((np.squeeze(Y_pred.data.cpu().numpy()),np.squeeze(data)),axis=0))
