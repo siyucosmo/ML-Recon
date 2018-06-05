@@ -1,0 +1,46 @@
+{
+	"is_train":1,
+	"is_test":0,
+	"is_analysis":0,
+	"base_data_path": "/mnt/home/siyuh/Project/Recon/data/",
+	"output_path": "/mnt/home/siyuh/Project/Recon/result/unet/result5/",
+	"train": {
+		"data_partition": {
+			"lIndex": 0,
+			"hIndex":8000,
+			"aug": 1
+		},
+		"batch_size": 50,
+		"num_workers": 4,
+		"num_epoches": 500,
+		"eval_frequency": 20
+	},
+	"val": {
+		"data_partition": {
+			"lIndex": 8000,
+			"hIndex": 9000,
+			"aug": 1
+		},
+		"batch_size": 100,
+		"num_workers": 4
+	},
+	"test": {
+		"data_partition": {
+			"lIndex": 9000,
+			"hIndex": 10000,
+			"aug": 1
+		},
+		"batch_size": 1,
+		"num_workers": 4
+	},
+	"net_params":{
+		"lr":1e-4,
+		"reg":1e-4
+	},
+	"analysis":{
+		"A":0,
+		"k":0,
+		"size":32,
+		"phi":0
+	}
+}
