@@ -1,13 +1,13 @@
 {
-	"is_train":1,
-	"is_test":0,
+	"is_train":0,
+	"is_test":1,
 	"is_analysis":0,
-	"base_data_path": "/mnt/home/siyuh/Project/Recon/data/",
-	"output_path": "/mnt/home/siyuh/Project/Recon/result/unet/result5/",
+	"base_data_path": "/mnt/home/siyuh/Project/Recon/data/data_version3/",
+	"output_path": "/mnt/home/siyuh/Project/Recon/result/unet/debug/",
 	"train": {
 		"data_partition": {
-			"lIndex": 0,
-			"hIndex":8000,
+			"lIndex": 1000,
+			"hIndex":9000,
 			"aug": 1
 		},
 		"batch_size": 50,
@@ -17,8 +17,8 @@
 	},
 	"val": {
 		"data_partition": {
-			"lIndex": 8000,
-			"hIndex": 9000,
+			"lIndex": 9000,
+			"hIndex": 10000,
 			"aug": 1
 		},
 		"batch_size": 100,
@@ -26,10 +26,11 @@
 	},
 	"test": {
 		"data_partition": {
-			"lIndex": 9000,
-			"hIndex": 10000,
-			"aug": 1
+			"lIndex": 0,
+			"hIndex": 1000,
+			"aug": 0
 		},
+		"model":"/mnt/home/siyuh/Project/Recon/result/unet/result6/BestModel.pt",
 		"batch_size": 1,
 		"num_workers": 4
 	},

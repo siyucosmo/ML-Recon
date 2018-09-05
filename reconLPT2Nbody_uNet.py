@@ -29,30 +29,34 @@ if __name__ == "__main__":
 
 	base_data_path = configs["base_data_path"]
 	output_path = configs["output_path"]
-	TrainSet = SimuData(base_data_path,
-						configs['train']['data_partition']['lIndex'],
-						configs['train']['data_partition']['hIndex'],
-						configs['train']['data_partition']['aug']) 
-	ValSet = SimuData(base_data_path,
-						configs['val']['data_partition']['lIndex'],
-						configs['val']['data_partition']['hIndex'],
-						configs['val']['data_partition']['aug']) 
-	TestSet = SimuData(base_data_path,
-						configs['test']['data_partition']['lIndex'],
-						configs['test']['data_partition']['hIndex'], 
-						configs['test']['data_partition']['aug']) 
-	TrainLoader = DataLoader(TrainSet, 
-							batch_size=configs['train']['batch_size'],
-							shuffle=True,
-							num_workers=configs['train']['num_workers']) 
-	ValLoader   = DataLoader(ValSet,
-							batch_size=configs['val']['batch_size'],
-							shuffle=False,
-							num_workers=configs['val']['num_workers']) 
-	TestLoader  = DataLoader(TestSet,
-							batch_size=configs['test']['batch_size'],
-							shuffle=False, 
-							num_workers=configs['test']['num_workers']) 
+
+	if configs["is_train"]:
+		TrainSet = SimuData(base_data_path,
+					configs['train']['data_partition']['lIndex'],
+					configs['train']['data_partition']['hIndex'],
+					configs['train']['data_partition']['aug']) 
+		ValSet = SimuData(base_data_path,
+					configs['val']['data_partition']['lIndex'],
+					configs['val']['data_partition']['hIndex'],
+					configs['val']['data_partition']['aug']) 
+		TrainLoader = DataLoader(TrainSet,
+					batch_size=configs['train']['batch_size'],
+					shuffle=True,
+					num_workers=configs['val']['num_workers'])
+		ValLoader   = DataLoader(ValSet,
+					batch_size=configs['val']['batch_size'],
+					shuffle=False,
+					num_workers=configs['val']['num_workers'])
+	elif configs["is_test"]:
+		TestSet = SimuData(base_data_path,
+					configs['test']['data_partition']['lIndex'],
+					configs['test']['data_partition']['hIndex'], 
+					configs['test']['data_partition']['aug']) 
+	
+		TestLoader  = DataLoader(TestSet,
+					batch_size=configs['test']['batch_size'],
+					shuffle=False, 
+					num_workers=configs['test']['num_workers']) 
 	
 	eval_frequency = configs["train"]["eval_frequency"]
 	loss_val = []
@@ -92,10 +96,14 @@ if __name__ == "__main__":
 						torch.save(net,output_path+'BestModel'+str(iterTime)+'.pt')
 				iterTime+=1
 	if(configs["is_test"]):
-		test_prediction(output_path,"BestModel.pt",TestLoader)
+		test_prediction(output_path,configs["test"]["model"],TestLoader)
 
 	if(configs["is_analysis"]):
-		analysis(output_path,configs["analysis"]["size"],configs["analysis"]["A"],configs["analysis"]["phi"],configs["analysis"]["k"])
+		net = torch.load(output_path+'BestModel.pt')      
+		net.cuda()
+		net.eval()
+		#np.save('layer1_weight.npy',net.layer1[0].conv1.weight.data.cpu().numpy())
+		#analysis(output_path,"BestModel.pt",configs["analysis"]["size"],configs["analysis"]["A"],configs["analysis"]["phi"],configs["analysis"]["k"])
 
 			
 
