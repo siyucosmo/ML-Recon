@@ -86,35 +86,39 @@ def crop_tensor(x):
 	return x
 
 def test_prediction(path,model,TestLoader):
-	net = torch.load(path+model)
+	net = torch.load(model)
 	net.cuda()
 	net.eval()
-	'''
+	
 	for t, data in enumerate(TestLoader, 0):
 		print (t)
 		NetInput = torch.autograd.Variable(data[0],requires_grad=False).cuda()
 		Y_pred = net(NetInput)
 		np.save(path+'test_'+str(t)+'.npy',np.concatenate((np.squeeze(Y_pred.data.cpu().numpy()),np.squeeze(data[1].numpy())),axis=0))
-		if(t==1000):
-			break
-	'''
-	data = np.fromfile('/mnt/home/siyuh/Project/Recon/data/32-pancake/00-00-01-phi090/00000000-00001000.32.10.f4',dtype='f4').reshape([-1,32,32,32,10])
-	#data = np.fromfile('/mnt/home/siyuh/Project/Recon/data/32-pancake/00.10/00000000-00001000.32.10.f4',dtype='f4').reshape([-1,32,32,32,10])
-	for t in range(0,5):
-		print (t)
-		data_temp = torch.autograd.Variable(torch.from_numpy(np.expand_dims(np.einsum('ijkl->lijk', data[t][:,:,:,1:4]),axis=0)).float(),requires_grad=False).cuda()
-		NetInput = torch.autograd.Variable(data_temp,requires_grad=False).cuda()
-		Y_pred = net(NetInput)
-		np.save(path+'pancake_00-00-01-test_'+str(t)+'.npy',np.squeeze(Y_pred.data.cpu().numpy()))
-		#np.save(path+'00.10_test_'+str(t)+'.npy',np.squeeze(Y_pred.data.cpu().numpy()))
 	
-def analysis(path,size, A, phi, k):
+	#data = np.fromfile('/mnt/home/siyuh/Project/Recon/data/data_version3/32-pancake/00-00-03-phi090/00000000-00001000.32.10.f4',dtype='f4').reshape([-1,32,32,32,10])
+	#data = np.fromfile('/mnt/home/siyuh/Project/Recon/data/data_version3/32-pancake/01.80/00000000-00001000.32.10.f4',dtype='f4').reshape([-1,32,32,32,10])
+	#data = np.fromfile('/mnt/home/siyuh/Project/Recon/data/data_version3/32-pancake/Om/om-0.32-00000000-00001000.32.10.f4',dtype='f4').reshape([-1,32,32,32,10])
+	#data = np.fromfile('/mnt/home/siyuh/Project/Recon/data/data_version3/32-pancake/32-sm/sm-24.00/00000000-00001000.32.10.f4',dtype='f4').reshape([-1,32,32,32,10])
+	#data = np.fromfile('/mnt/home/siyuh/Project/Recon/data/data_version3/32-pancake/dual_pancake/00-00-03-phi090-00-00-10-phi090/00000000-00001000.32.10.f4',dtype='f4').reshape([-1,32,32,32,10])
+	#for t in range(0,1):
+	#	print (t)
+	#	data_temp = torch.autograd.Variable(torch.from_numpy(np.expand_dims(np.einsum('ijkl->lijk', data[t][:,:,:,1:4]),axis=0)).float(),requires_grad=False).cuda()
+	#	NetInput = torch.autograd.Variable(data_temp,requires_grad=False).cuda()
+	#	Y_pred = net(NetInput)
+	#	#np.save(path+'pancake_00-00-03-test_'+str(t)+'.npy',np.squeeze(Y_pred.data.cpu().numpy()))
+	#	#np.save(path+'01.80_test_'+str(t)+'.npy',np.squeeze(Y_pred.data.cpu().numpy()))
+	#	#np.save(path+'sm/sm_24_test_'+str(t)+'.npy',np.squeeze(Y_pred.data.cpu().numpy()))
+	#	np.save(path+'dual_pancake/k-00-00-03_k-00-00-10_'+str(t)+'.npy',np.squeeze(Y_pred.data.cpu().numpy()))
+	
+
+def analysis(path,model,size, A, phi, k):
         #data = genwaves(size, A, phi, k)
         #data = np.einsum('ijkl->lijk',data)
         data = np.zeros([3,32,32,32])
         data = np.expand_dims(data,axis=0)
         NetInput = torch.autograd.Variable(torch.from_numpy(data).float(),requires_grad=False).cuda()
-        net = torch.load(path+'/BestModel.pt')
+        net = torch.load(path+model)
         net.cuda()
         net.eval()
         Y_pred = net(NetInput)
