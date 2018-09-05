@@ -3,22 +3,16 @@ Objective:
 ML reconstruction project to predict Nbody simulations from ZA.
 
 File descriptions:
-reconLPT2Nbody_uNet.py #main excute files
-
-periodic_padding.py #code to fulfill periodic boundary padding
-
-data_utils.py #how to load data + test/analysis
-
-model/BestModel.pt #Best trained model
-
-configs/config_unet.json #most of the hyperparameters
-
-Unet/uNet.py #architecture
-
-plot.py #plot the result
+	reconLPT2Nbody_uNet.py #main excute files
+	periodic_padding.py #code to fulfill periodic boundary padding
+	data_utils.py #how to load data + test/analysis
+	model/BestModel.pt #Best trained model	
+	configs/config_unet.json #most of the hyperparameters
+	Unet/uNet.py #architecture
+	plot.py #plot the result
 
 To run the code:
-python reconLPT2Nbody_uNet.py --config_file_path configs/config_unet.json
+	python reconLPT2Nbody_uNet.py --config_file_path configs/config_unet.json
 
 Instruction:
 1. Input raw data should be in the format of x_y.npy (y is in range of (0,1000,1) and x is controled by lIndex and hIndexin configs/config_unet.json  e.g. 0_0.npy, 1_999.npy). The shape of the data in each file should be (32,32,32,10), where the first coloumn is density, the second to forth coloumn is (\phi_x, \phi_y,\phi_z) for ZA, the fifth to seventh column is for LPT, and the eighth to tenth is for fastPM. 
