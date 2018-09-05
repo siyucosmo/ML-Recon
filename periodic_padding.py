@@ -6,8 +6,8 @@ def pos_int_to_base(x, b=2, extend_zero_to_length=0):
 	out = []
 	cur = x
 	while cur > 0:
-		out.append(cur % b)
-		cur = cur / b
+		out.append(int(cur % b))
+		cur = int(cur / b)
 	if extend_zero_to_length>0 and len(out) < extend_zero_to_length:
 		out += [0]*(extend_zero_to_length - len(out))
 	return out[::-1]
@@ -46,7 +46,11 @@ def periodic_padding_3d(x, pad):
 			compute_index_from_pad_region(region_code[1], int(x.shape[3]), pad[2:4])
 		z_original_lower, z_original_upper, z_out_lower, z_out_upper =\
 			compute_index_from_pad_region(region_code[2], int(x.shape[4]), pad[4:6])
-		out[:,:,x_out_lower: x_out_upper,
+		if x_out_lower != x_out_upper and\
+			y_out_lower != y_out_upper and\
+			z_out_lower != z_out_upper:
+
+			out[:,:,x_out_lower: x_out_upper,
 			y_out_lower: y_out_upper,
 			z_out_lower: z_out_upper] =\
 			x[:,:,x_original_lower: x_original_upper,
