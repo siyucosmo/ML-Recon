@@ -3,12 +3,18 @@ Objective:
 ML reconstruction project to predict Nbody simulations from ZA.
 
 File descriptions:
-reconLPT2Nbody_uNet.py #main excute files \n
+reconLPT2Nbody_uNet.py #main excute files
+
 periodic_padding.py #code to fulfill periodic boundary padding
+
 data_utils.py #how to load data + test/analysis
+
 model/BestModel.pt #Best trained model
+
 configs/config_unet.json #most of the hyperparameters
+
 Unet/uNet.py #architecture
+
 plot.py #plot the result
 
 To run the code:
