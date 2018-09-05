@@ -30,7 +30,7 @@
 			"hIndex": 1000,
 			"aug": 0
 		},
-		"model":"/mnt/home/siyuh/Project/Recon/result/unet/result6/BestModel.pt",
+		"model":"model/BestModel.pt",
 		"batch_size": 1,
 		"num_workers": 4
 	},
