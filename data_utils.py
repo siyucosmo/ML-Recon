@@ -3,7 +3,7 @@ from torch.utils.data.dataset import Dataset
 import numpy as np
 import sys
 sys.path.insert(0,'/mnt/home/siyuh/Project/Recon/analysis')
-from genwaves import genwaves
+#from genwaves import genwaves
 
 class SimuData(Dataset):
 	def __init__(self,base_path,lIndex,hIndex,aug):
@@ -12,7 +12,7 @@ class SimuData(Dataset):
 			y = [base_path+str(x)+'_'+str(i)+'.npy' for i in range(1000)]
 			self.datafiles+=y
 		self.aug=aug
-	
+
 	def __getitem__(self, index):
 		return get_mini_batch(self.datafiles[index],self.aug)
 
@@ -89,13 +89,13 @@ def test_prediction(path,model,TestLoader):
 	net = torch.load(model)
 	net.cuda()
 	net.eval()
-	
+
 	for t, data in enumerate(TestLoader, 0):
 		print (t)
 		NetInput = torch.autograd.Variable(data[0],requires_grad=False).cuda()
 		Y_pred = net(NetInput)
 		np.save(path+'test_'+str(t)+'.npy',np.concatenate((np.squeeze(Y_pred.data.cpu().numpy()),np.squeeze(data[1].numpy())),axis=0))
-	
+
 	#data = np.fromfile('/mnt/home/siyuh/Project/Recon/data/data_version3/32-pancake/00-00-03-phi090/00000000-00001000.32.10.f4',dtype='f4').reshape([-1,32,32,32,10])
 	#data = np.fromfile('/mnt/home/siyuh/Project/Recon/data/data_version3/32-pancake/01.80/00000000-00001000.32.10.f4',dtype='f4').reshape([-1,32,32,32,10])
 	#data = np.fromfile('/mnt/home/siyuh/Project/Recon/data/data_version3/32-pancake/Om/om-0.32-00000000-00001000.32.10.f4',dtype='f4').reshape([-1,32,32,32,10])
@@ -110,7 +110,7 @@ def test_prediction(path,model,TestLoader):
 	#	#np.save(path+'01.80_test_'+str(t)+'.npy',np.squeeze(Y_pred.data.cpu().numpy()))
 	#	#np.save(path+'sm/sm_24_test_'+str(t)+'.npy',np.squeeze(Y_pred.data.cpu().numpy()))
 	#	np.save(path+'dual_pancake/k-00-00-03_k-00-00-10_'+str(t)+'.npy',np.squeeze(Y_pred.data.cpu().numpy()))
-	
+
 
 def analysis(path,model,size, A, phi, k):
         #data = genwaves(size, A, phi, k)

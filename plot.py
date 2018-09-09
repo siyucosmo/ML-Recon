@@ -81,7 +81,7 @@ def getPow_ave(path_pred,path_true,f_pred_pre,f_pred_post,f_true,num,d):
             k,P = getPow_dis(test,Nbody[n])
             powReconxNbody += P
             k,P = getPow_dis(LPT[n],Nbody[n])
-            powLPTxNbody += P 
+            powLPTxNbody += P
     else:
         for n in range(0,num):
             test = np.einsum('ijkl->jkli',np.load(path_pred+f_pred_pre+str(n)+f_pred_post))[:,:,:,0:3]
@@ -98,9 +98,9 @@ def getPow_ave(path_pred,path_true,f_pred_pre,f_pred_post,f_true,num,d):
     return k,powNbody/num,powLPT/num,powRecon/num,powLPTxNbody/num,powReconxNbody/num
 
 #----------plot powspec--------------#
-def plot_pow(k,powNbody,powLPT,powRecon,LxN,RxN,title):    
+def plot_pow(k,powNbody,powLPT,powRecon,LxN,RxN,title):
     fig = plt.figure(figsize=(6,8))
-    
+
     ax1 = plt.subplot2grid((4,1),(0,0),rowspan=2)
     plt.plot(k, powLPT,label = '2LPT')
     plt.plot(k, powRecon,label = 'U-Net')
@@ -110,7 +110,7 @@ def plot_pow(k,powNbody,powLPT,powRecon,LxN,RxN,title):
     plt.legend(loc='lower left')
     plt.title(title)
     plt.setp(ax1.get_xticklabels(),visible=False)
-    
+
     ax2 = plt.subplot2grid((4,1),(2,0), rowspan = 1,sharex=ax1)
     plt.axhline(y=1, color='k', linestyle='--')
     plt.plot(k, powLPT/powNbody,label = 'LPT')
@@ -143,7 +143,7 @@ def plot_pancake(k,powNbody,powRecon,powInput,title):
     plt.title(r"displacement "+title)
     plt.ylabel(r'$P(k)}$')
     plt.ylim(ymin = 1e-5)
-    
+
     plt.subplot(gs[1, 0],sharex=ax1)
     plt.loglog(k[pos],powRecon[pos]/powNbody[pos],'*',label='Recon',c=c[1])
     plt.xlabel('k '+r'[h/Mpc]')
@@ -202,9 +202,9 @@ def look_den_slice(net1,net2,net3,s,title):
     plt.axis('off')
     plt.title('U-Net')
     cbax = plt.subplot(gs[0,3])
-    cbar = fig.colorbar(mappable=im,cax=cbax, orientation = 'vertical', 
+    cbar = fig.colorbar(mappable=im,cax=cbax, orientation = 'vertical',
                  ticklocation = 'right')
-    cbar.ax.tick_params(labelsize=12) 
+    cbar.ax.tick_params(labelsize=12)
     plt.subplot(gs[1, 1])
     im = plt.imshow((net1[:, :, s]-net2[:, :, s]),cmap = cmap,vmin = -amp,vmax=amp)
     #plt.xticks([0,16,32],[0,64,128])
@@ -218,9 +218,9 @@ def look_den_slice(net1,net2,net3,s,title):
     plt.axis('off')
     plt.title(r'fastPM $-$ U-Net')
     cbax = plt.subplot(gs[1,3])
-    cbar = fig.colorbar(mappable=im,cax=cbax, orientation = 'vertical', 
+    cbar = fig.colorbar(mappable=im,cax=cbax, orientation = 'vertical',
                  ticklocation = 'right')
-    cbar.ax.tick_params(labelsize=12) 
+    cbar.ax.tick_params(labelsize=12)
     fig.subplots_adjust(hspace=.2)
 
 def look_dis_slice(net1,net2,net3,s,title):
@@ -261,9 +261,9 @@ def look_dis_slice(net1,net2,net3,s,title):
     plt.axis('off')
     plt.title('U-Net')
     cbax = plt.subplot(gs[0,3])
-    cbar = fig.colorbar(mappable=im,cax=cbax, orientation = 'vertical', 
+    cbar = fig.colorbar(mappable=im,cax=cbax, orientation = 'vertical',
                  ticklocation = 'right')
-    cbar.ax.tick_params(labelsize=12) 
+    cbar.ax.tick_params(labelsize=12)
     plt.subplot(gs[1, 1])
     im = plt.imshow(net1[s,:,:,0]-net2[s,:,:,0],cmap = "coolwarm",vmin = amp_low1,vmax=amp_high1)
     #plt.xticks([0,16,32],[0,64,128])
@@ -277,13 +277,13 @@ def look_dis_slice(net1,net2,net3,s,title):
     plt.axis('off')
     plt.title(r'fastPM $-$ U-Net')
     cbax = plt.subplot(gs[1,3])
-    cbar = fig.colorbar(mappable=im,cax=cbax, orientation = 'vertical', 
+    cbar = fig.colorbar(mappable=im,cax=cbax, orientation = 'vertical',
                  ticklocation = 'right')
     cbar.ax.tick_params(labelsize=12)
     fig.subplots_adjust(hspace=0.2)
 
 #------------plot different A/Om-----------------#
-def plot_powA(k,powNbody,powLPT,powRecon,LxN,RxN,label,c_i):    
+def plot_powA(k,powNbody,powLPT,powRecon,LxN,RxN,label,c_i):
     c = plt.rcParams['axes.prop_cycle'].by_key()['color']
 
     ax1.loglog(k,powLPT,color = c[c_i],ls='--')
@@ -310,32 +310,32 @@ def plot_residual(noise):
 	#plt.xticks([0,16,32],[0,64,128])
 	#plt.yticks([16,0],[64,128])
 	plt.axis('off')
-	
+
 	ax = plt.subplot(gs[1,0])
 	cbar=plt.colorbar(im,cax=ax,orientation="horizontal",
 	                  ticks=[np.min(noise[:,:,:,0].mean(axis=0)),np.max(noise[:,:,:,0].mean(axis=0))])
 	cbar.ax.set_xticklabels([np.round(np.min(noise[:,:,:,0].mean(axis=0)),3),
 	                         np.round(np.max(noise[:,:,:,0].mean(axis=0)),3)],rotation=30)
-	
+
 	plt.subplot(gs[0, 1])
 	im = plt.imshow(noise[:,:,:,1].mean(axis=1),cmap = "coolwarm")
 	plt.title('y')
 	#plt.xticks([0,16,32],[0,64,128])
 	#plt.yticks([16,0],[64,128])
-	plt.axis('off')	
+	plt.axis('off')
 
 	ax = plt.subplot(gs[1,1])
 	cbar=plt.colorbar(im,cax=ax,orientation="horizontal",
 	                  ticks=[np.min(noise[:,:,:,1].mean(axis=1)),np.max(noise[:,:,:,1].mean(axis=1))])
 	cbar.ax.set_xticklabels([np.round(np.min(noise[:,:,:,1].mean(axis=1)),3),
 	                         np.round(np.max(noise[:,:,:,1].mean(axis=1)),3)],rotation=30)
-	
+
 	plt.subplot(gs[0, 2])
 	im = plt.imshow(noise[:,:,:,2].mean(axis=2),cmap = "coolwarm")
 	plt.title('z')
 	#plt.xticks([0,16,32],[0,64,128])
 	#plt.yticks([16,0],[64,128])
-	plt.axis('off')	
+	plt.axis('off')
 
 	ax = plt.subplot(gs[1,2])
 	cbar=plt.colorbar(im,cax=ax,orientation="horizontal",
@@ -343,9 +343,9 @@ def plot_residual(noise):
 	cbar.ax.set_xticklabels([np.round(np.min(noise[:,:,:,2].mean(axis=2)),3),
 	                         np.round(np.max(noise[:,:,:,2].mean(axis=2)),3)],rotation=30)
 	plt.subplots_adjust(wspace=0.2)
-	
+
 	plt.savefig(configs['res']['pred_path']+'noise.pdf',bbox_inches='tight')
-	  
+
 if __name__ == "__main__":
     print (matplotlib.matplotlib_fname())
     parser = get_parser()
@@ -435,7 +435,7 @@ if __name__ == "__main__":
                 k,powNbody,powLPT,powRecon,LxN,RxN= getPow_ave(configs["Om"]["path_pred"],configs["Om"]["path_true"],'Om_'+str(Om).ljust(4,'0')+'_test_','.npy','om-'+str(Om).ljust(4,'0')+'-'+'00000000-00001000.32.10.f4',1000,0)
             l0,l1,l2 = plot_powA(k,powNbody,powLPT,powRecon,LxN,RxN,r"$\Omega_m$="+str(Om),c_i)
             c_i += 1
-        
+
         if configs["Om"]["d"]==1:
             ax1.set_title('displacement')
         else:

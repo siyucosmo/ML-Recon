@@ -37,7 +37,7 @@ class Lpt2NbodyNet(nn.Module):
 		self.layer7 = self._make_layer(block,128,64,blocks=2,stride=1)
 		self.deconv4 = nn.ConvTranspose3d(64,3,1,stride=1,padding=0)
 
-	
+
 
 	def _make_layer(self,block,inplanes,outplanes,blocks,stride=1):
 		layers = []
@@ -57,9 +57,9 @@ class Lpt2NbodyNet(nn.Module):
 		x  = torch.cat((x,x2),dim=1)
 		x  = self.layer6(x)
 		x  = periodic_padding_3d(x,pad=(0,1,0,1,0,1))
-		x  = nn.functional.relu(self.deconv_batchnorm2(crop_tensor(self.deconv2(x))),inplace=True) 
+		x  = nn.functional.relu(self.deconv_batchnorm2(crop_tensor(self.deconv2(x))),inplace=True)
 		x  = torch.cat((x,x1),dim=1)
 		x  = self.layer7(x)
 		x  = self.deconv4(x)
-		
+
 		return x
