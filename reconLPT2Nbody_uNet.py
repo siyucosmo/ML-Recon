@@ -1,7 +1,16 @@
 #!/usr/bin/env python
 
-import json
 import argparse
+
+def get_parser():
+	parser = argparse.ArgumentParser(description="U-Net for ZA -> Nbody net")
+	parser.add_argument("cuda_visible_devices", type=str)
+	parser.add_argument("--cuda_cache_path", type=str,
+		default="/home/scratch/siyuh/nv_ComputeCache")  # to fix issue with auton lab gpu
+	parser.add_argument("-c", "--config_file_path", type=str, default='')
+	return parser
+
+import json
 import numpy as np
 import torch
 import torch.nn as nn
@@ -13,16 +22,15 @@ import sys
 sys.path.insert(0, './Unet')
 from uNet import BasicBlock, Lpt2NbodyNet
 
-def get_parser():
-	parser = argparse.ArgumentParser(description="U-Net for ZA -> Nbody net")
-	parser.add_argument("-c", "--config_file_path", type=str, default='')
-	return parser
-
 if __name__ == "__main__":
 	parser = get_parser()
 	args = parser.parse_args()
 	with open(args.config_file_path) as f:
 		configs = json.load(f)
+
+	import os
+	os.environ["CUDA_VISIBLE_DEVICES"] = args.cuda_visible_devices
+	os.environ["CUDA_CACHE_PATH"] = args.cuda_cache_path
 
 	net = Lpt2NbodyNet(BasicBlock)
 	net.cuda()
